@@ -79,7 +79,16 @@ ruidoqam=moduladaqam+((sqrt(varianza))*(randn(1,length(moduladaqam))+j*randn(1,l
 %ruidoqam=awgn(moduladaqam,snr);
 x1=ruidoqam;
 %----------------------------------------
-%------------FILTRO CONFORMADOR DE PULSO (RECONSTRUCCION)---------------
+%---------------------MODULACION EN PORTADORA---------------------------
+%senaltransmitida=modulate(real(x1),100,10000,'qam',imag(x1));
+%plot(senaltransmitida)
+%----------------------------------------
+%---------------------DEMODULACION EN PORTADORA---------------------------
+%senalrecibida=demod(real(x1),100,10000,'qam',imag(x1));
+%figure,
+%plot(senalrecibida)
+%----------------------------------------
+%------------FILTRO CONFORMADOR DE PULSO (FILTRO ACOPLADO)---------------
 %Filtro de recepcion
 x1=filter(h1,1,x1);
 x1=x1(2*L*U+1:end);%Recorte del vector
@@ -88,9 +97,6 @@ s1=downsample(x1, U);
 ruidoqam=s1;
 %figure,
 %plot(x1)
-%-----------------------------------------------------
-%------------RECONSTRUCCION DEL SIMBOLO---------------
-demodqam=qamdemod(ruidoqam,16);
 %-----------------------------------------------------
 %-----------DEMODULACION QAM--------------
 %demodqam=qamdemod(ruidoqam,16);%Desicion QAM
@@ -141,7 +147,7 @@ end
 demodqam=funsimb;
 %-----------------------------------------------------
 %-----------DECODIFICACION DE SIMBOLOS--------------
-for i=1:1:length(demodqam)%Decodificacion Simbolos
+for i=1:1:length(demodqam)%Decodificacion Simbolos Gray
     if demodqam(i)==0
         bitqam((4*i)-3)=0;
         bitqam((4*i)-2)=0;
@@ -231,7 +237,7 @@ teober(ind)=((3/8)*erfc(sqrt((4/10)*ebno)));
 ebnodb(ind)=10*log10(ebno);
 end
 tiemposimulacion=toc
-vber=vser./(Ns);%BER(casi igual a)SER debido a codificacion gray
+vber=vser./((Ns/4)*(log2(M)));%BER(casi igual a)SER debido a codificacion gray
 %------------------GRAFICA DE RENDIMIENTO---------------------
 semilogy(ebnodb,vber)
 close all; figure
