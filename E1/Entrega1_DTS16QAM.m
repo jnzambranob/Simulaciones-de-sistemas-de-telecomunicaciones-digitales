@@ -15,7 +15,7 @@ h1 = rcosfir(Ro, L, U, Tf,'sqrt') ; %Funcion de transferencia del filtro conform
 %-------------------CONSTRUCCION DE MENSAJE------------------------
 Ns=1000000; %número de bits
 M=16; %orden de la modulación
-Es=1; %este valor depende de la constelación
+Es=10; %Energia promedio de la constelacion
 %vector de símbolos que entra al filtro conformador
 msg=randsrc(1,Ns,[0 1]); %genera los bits a transmitir
 for ind=1:1:32 %Ciclo iterativo para construir grafica de rendimiento
@@ -71,22 +71,24 @@ moduladaqam=x1;
 %---------------------RUIDO---------------------------
 %varianza=0;
 ebno=1*ind; %EbNo en veces
-Es=10; %Energia promedio de la constelacion
 varianza=Es/(2*log2(M)*ebno);%determina la varianza de ruido
 %Z=sigma*randn(1,length(S1)); %forma para dimensionar correctamente el ruido que se introduce al sistema 
 ruidoqam=moduladaqam+((sqrt(varianza))*(randn(1,length(moduladaqam))+j*randn(1,length(moduladaqam))));
 %snr=1.9;%Cambia la snr de la señal y el ruido (es funcion de la varianza)
 %ruidoqam=awgn(moduladaqam,snr);
 x1=ruidoqam;
+ap=x1;
 %----------------------------------------
 %---------------------MODULACION EN PORTADORA---------------------------
-%senaltransmitida=modulate(real(x1),100,10000,'qam',imag(x1));
-%plot(senaltransmitida)
+% fc=1000;
+% fs=3000;
+% [st,tiempo]=modulate(x1,fc,fs);
+%plot(st)
 %----------------------------------------
 %---------------------DEMODULACION EN PORTADORA---------------------------
-%senalrecibida=demod(real(x1),100,10000,'qam',imag(x1));
-%figure,
-%plot(senalrecibida)
+% sr=demod(st,fc,fs,'qam');
+% x1=sr;
+%plot(sr)
 %----------------------------------------
 %------------FILTRO CONFORMADOR DE PULSO (FILTRO ACOPLADO)---------------
 %Filtro de recepcion
