@@ -13,11 +13,11 @@ tic;
 Ro=0.35 ; U=16; L=8; Tf=1;
 h1 = rcosfir(Ro, L, U, Tf,'sqrt') ; %Funcion de transferencia del filtro conformador de pulsos
 %-------------------CONSTRUCCION DE MENSAJE------------------------
-Ns=1000000; %número de bits
+Nb=1000000; %número de bits
 M=16; %orden de la modulación
 Es=10; %Energia promedio de la constelacion
 %vector de símbolos que entra al filtro conformador
-msg=randsrc(1,Ns,[0 1]); %genera los bits a transmitir
+msg=randsrc(1,Nb,[0 1]); %genera los bits a transmitir
 for ind=1:1:32 %Ciclo iterativo para construir grafica de rendimiento
 %--------CONSTRUCCION DE LOS SIMBOLOS------------
 for i=1:4:length(msg)
@@ -80,15 +80,15 @@ x1=ruidoqam;
 ap=x1;
 %----------------------------------------
 %---------------------MODULACION EN PORTADORA---------------------------
-% fc=1000;
-% fs=3000;
-% [st,tiempo]=modulate(x1,fc,fs);
-%plot(st)
-%----------------------------------------
-%---------------------DEMODULACION EN PORTADORA---------------------------
-% sr=demod(st,fc,fs,'qam');
-% x1=sr;
-%plot(sr)
+% fc=10000;
+% fs=100000;
+% [st,tiempo]=modulate(real(x1),fc,fs,'qam',imag(x1));
+%%plot(st)
+%%----------------------------------------
+%%---------------------DEMODULACION EN PORTADORA---------------------------
+% [srr,sri]=demod(st,fc,fs,'qam');
+% x1=srr+j*sri;
+%%plot(sr)
 %----------------------------------------
 %------------FILTRO CONFORMADOR DE PULSO (FILTRO ACOPLADO)---------------
 %Filtro de recepcion
@@ -232,15 +232,16 @@ for i=1:1:length(demodqam)%Decodificacion Simbolos Gray
         bitqam(4*i)=1;
     end
 end
-%----------------DETECCION DE ERRORES DE TRANSMISION---------------------
+%------------------DETECCION DE ERRORES DE TRANSMISION----------------------
 ser=nnz(~(demodqam == simboloqam));
 vser(ind)=ser;
 teober(ind)=((3/8)*erfc(sqrt((4/10)*ebno)));
 ebnodb(ind)=10*log10(ebno);
 end
 tiemposimulacion=toc
-vber=vser./((Ns/4)*(log2(M)));%BER(casi igual a)SER debido a codificacion gray
-%------------------GRAFICA DE RENDIMIENTO---------------------
+Ns=Nb/log2(M);
+vber=(vser./(Ns))*(1/log2(M));%BER(casi igual a)SER debido a codificacion gray
+%-----------------------GRAFICA DE RENDIMIENTO-----------------------
 semilogy(ebnodb,vber)
 close all; figure
 semilogy(ebnodb,teober,'bs-','LineWidth',1);
@@ -252,4 +253,4 @@ legend('Teorica', 'Simulada');
 xlabel('Eb/No, dB')
 ylabel('Tasa de error de BIT')
 title('Curvas de rendimiento para el DTS asignado')
-%------------------------------FIN--------------------------------
+%--------------------------------FIN----------------------------------
