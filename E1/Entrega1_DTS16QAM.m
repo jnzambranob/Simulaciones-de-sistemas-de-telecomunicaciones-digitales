@@ -13,7 +13,7 @@ tic;
 Ro=0.35 ; U=4; L=8; Tf=1;
 h1 = rcosfir(Ro, L, U, Tf,'sqrt') ; %Funcion de transferencia del filtro conformador de pulsos
 %-------------------CONSTRUCCION DE MENSAJE------------------------
-Nb=2000000; %número de bits
+Nb=1000000; %número de bits
 M=16; %orden de la modulación
 Es=10; %Energia promedio de la constelacion
 Ns=Nb/log2(M);
