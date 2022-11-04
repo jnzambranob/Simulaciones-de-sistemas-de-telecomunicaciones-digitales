@@ -1,8 +1,4 @@
-clear;
-tic;
-%-------------------CONSTRUCCION DE MENSAJE------------------------
-Ns=1000000; %número de bits
-msg=randsrc(1,Ns,[0 1]); %genera los bits a transmitir
+function y = cdmamod(msg)
 msg1=[];
 msg2=[];
 msg3=[];
@@ -11,6 +7,7 @@ msg5=[];
 msg6=[];
 msg7=[];
 msg8=[];
+
 for i=1:1:length(msg)/8
     msg1(i)=msg(i*8-7);
     msg2(i)=msg(i*8-6);
@@ -185,4 +182,8 @@ for i=1:1:length(msg)/8
         C88(i*8)=1;
     end
 end
+
+y=C81+C82+C83+C84+C85+C86+C87+C88;
+
+
 
