@@ -13,7 +13,7 @@ tic;
 Ro=0.35 ; U=4; L=8; Tf=1;
 h1 = rcosfir(Ro, L, U, Tf,'sqrt') ; %Funcion de transferencia del filtro conformador de pulsos
 %-------------------CONSTRUCCION DE MENSAJE------------------------
-Nb=1000000; %número de bits
+Nb=100000; %número de bits
 M=2; %orden de la modulación
 Es=1; %Energia promedio de la constelacion
 Ns=Nb/log2(M);
@@ -30,7 +30,7 @@ s=moduladapsk;
 %-----------------------------------------------------
 %---------------------CDMA-----------------------
 %%Codificacion de vectores CDMA
-s=cdmamod(s);
+%s=cdmamod(s);
 %-----------------------------------------------------
 %-----------FILTRO CONFORMADOR DE PULSO---------------
 % upsample 
@@ -78,6 +78,11 @@ s1=downsample(x1, U);
 ruidopsk=s1;
 %figure,
 %plot(x1)
+%-----------------------------------------------------
+
+%------------------DECODIFICACION CDMA-----------------------
+%%Deodificacion de vectores CDMA
+%ruidopsk=cdmademod(ruidopsk);
 %-----------------------------------------------------
 %-----------DEMODULACION QAM--------------
 %demodqam=qamdemod(ruidoqam,16);%Desicion QAM
