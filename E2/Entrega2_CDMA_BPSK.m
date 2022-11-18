@@ -15,7 +15,7 @@ h1 = rcosfir(Ro, L, U, Tf,'sqrt') ; %Funcion de transferencia del filtro conform
 %-------------------CONSTRUCCION DE MENSAJE------------------------
 Nb=100000; %número de bits
 M=2; %orden de la modulación
-Es=1; %Energia promedio de la constelacion
+Es=8*8; %Energia promedio de la constelacion
 Ns=Nb/log2(M);
 R=4
 %vector de símbolos que entra al filtro conformador
@@ -26,11 +26,12 @@ for ind=1:1:11 %Ciclo iterativo para construir grafica de rendimiento
 simbolopsk=msg;
 %-----------------MODULACION QAM----------------------
 moduladapsk=pskmod(simbolopsk,M);
-s=moduladapsk;
+so=real(moduladapsk);
 %-----------------------------------------------------
 %---------------------CDMA-----------------------
 %%Codificacion de vectores CDMA
-%s=cdmamod(s);
+s=cdmamod(so);
+%tests=cdmademod(s);
 %-----------------------------------------------------
 %-----------FILTRO CONFORMADOR DE PULSO---------------
 % upsample 
@@ -39,6 +40,7 @@ su1=upsample(s,U);
 su=[su1 zeros(1,2*L*U)];
 %Filtro de transmision
 x1=filter(h1,1,su);
+%x1bkp=x1;
 %-----------------------------------------------------
 %---------------------MODULACION EN PORTADORA---------------------------
 fs = U*R;
@@ -47,6 +49,7 @@ ts = 1/fs;
 fc=(1/4)*(fs); %Para cumplir nyquist
 t = 0 : ts : (Ns*T-ts)+R;
 portadorapsk = sqrt(2)*(x1.*cos(2*pi*fc.*t)-imag(x1).*sin(2*pi*fc.*t)); % Traslacion en frecuencia
+ppsk = portadorapsk;
 %-----------------------------------------------------
 %---------------------RUIDO---------------------------
 %varianza=0;
@@ -58,6 +61,7 @@ ruidopsk=portadorapsk+sqrt(varianza)*randn(1,length(portadorapsk));
 %ruidoqam=awgn(moduladaqam,snr);
 x1=ruidopsk;
 x=x1;
+%x1bkp2=x;
 %----------------------------------------
 %-----------DEMODULACION EN PORTADORA----------------
 Ts = 1/fs;
@@ -65,8 +69,8 @@ Y=x;
 %t = 0 : Ts : Ts*(Ns-1);  
 Y_real = sqrt(2)*Y.*cos(2*pi*fc.*t);    
 Y_imag = -sqrt(2)*Y.*sin(2*pi*fc.*t);
-y = (Y_real + 1i*Y_imag);
-%y=Y_real;
+%y = (Y_real + 1i*Y_imag);
+y=real(Y_real);
 x1=y;
 %----------------------------------------
 %------------FILTRO CONFORMADOR DE PULSO (FILTRO ACOPLADO)---------------
@@ -82,7 +86,7 @@ ruidopsk=s1;
 
 %------------------DECODIFICACION CDMA-----------------------
 %%Deodificacion de vectores CDMA
-%ruidopsk=cdmademod(ruidopsk);
+ruidopsk=cdmademod(ruidopsk);
 %-----------------------------------------------------
 %-----------DEMODULACION QAM--------------
 %demodqam=qamdemod(ruidoqam,16);%Desicion QAM
