@@ -16,6 +16,7 @@ h1 = rcosfir(Ro, L, U, Tf,'sqrt') ; %Funcion de transferencia del filtro conform
 Nb=100000; %número de bits
 M=2; %orden de la modulación
 Es=8*8; %Energia promedio de la constelacion
+wal=8;
 Ns=Nb/log2(M);
 R=4
 %vector de símbolos que entra al filtro conformador
@@ -48,6 +49,7 @@ T = 1/R;
 ts = 1/fs;
 fc=(1/4)*(fs); %Para cumplir nyquist
 t = 0 : ts : (Ns*T-ts)+R;
+tc = t./wal;
 portadorapsk = sqrt(2)*(x1.*cos(2*pi*fc.*t)-imag(x1).*sin(2*pi*fc.*t)); % Traslacion en frecuencia
 ppsk = portadorapsk;
 %-----------------------------------------------------
@@ -61,6 +63,7 @@ ruidopsk=portadorapsk+sqrt(varianza)*randn(1,length(portadorapsk));
 %ruidoqam=awgn(moduladaqam,snr);
 x1=ruidopsk;
 x=x1;
+xc=x1;
 %x1bkp2=x;
 %----------------------------------------
 %-----------DEMODULACION EN PORTADORA----------------
