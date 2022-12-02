@@ -53,6 +53,7 @@ tc = t./wal;
 portadorapsk = sqrt(2)*(x1.*cos(2*pi*fc.*t)-imag(x1).*sin(2*pi*fc.*t)); % Traslacion en frecuencia
 ppsk = portadorapsk;
 %-----------------------------------------------------
+%---------------------CANAL---------------------------
 %---------------------RUIDO---------------------------
 %varianza=0;
 ebno=1*ind; %EbNo en veces
@@ -68,8 +69,14 @@ x=x1;
 %xd=x+xdesplazada;%Canal dispersivo a
 xc=x1;
 %x1bkp2=x;
-%----------------------------------------
-%-----------DEMODULACION EN PORTADORA----------------
+%-----------------------------------------------------
+%-------------------------MULTITRAYECTO------------------------------
+
+%-----------------------------------------------------
+%---------------INTERFERENCIA DE BANDA ESTRECHA----------------------
+
+%-----------------------------------------------------
+%-------------------DEMODULACION EN PORTADORA-----------------------
 Ts = 1/fs;
 Y=x;
 %t = 0 : Ts : Ts*(Ns-1);  
@@ -89,7 +96,6 @@ ruidopsk=s1;
 %figure,
 %plot(x1)
 %-----------------------------------------------------
-
 %------------------DECODIFICACION CDMA-----------------------
 %%Deodificacion de vectores CDMA
 ruidopsk=cdmademod(ruidopsk);
@@ -135,4 +141,7 @@ legend('Teorica', 'Simulada');
 xlabel('Eb/No, dB')
 ylabel('Tasa de error de BIT')
 title('Curvas de rendimiento para el DTS asignado')
+%--------------------------------FIN----------------------------------
+%-----------------------GRAFICA DE ESPECTRO-----------------------
+
 %--------------------------------FIN----------------------------------
