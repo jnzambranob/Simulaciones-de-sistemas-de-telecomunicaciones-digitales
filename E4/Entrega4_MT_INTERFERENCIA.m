@@ -64,17 +64,16 @@ ruidopsk=portadorapsk+sqrt(varianza)*randn(1,length(portadorapsk));
 %ruidoqam=awgn(moduladaqam,snr);
 x1=ruidopsk;
 x=x1;
+%-----------------------------------------------------
+%-------------------------MULTITRAYECTO------------------------------
 %desplazamiento=1;
 %xdesplazada=x(corrimiento en segundos)
 %xd=x+xdesplazada;%Canal dispersivo a
 xc=x1;
 %x1bkp2=x;
 %-----------------------------------------------------
-%-------------------------MULTITRAYECTO------------------------------
-
-%-----------------------------------------------------
 %---------------INTERFERENCIA DE BANDA ESTRECHA----------------------
-
+x
 %-----------------------------------------------------
 %-------------------DEMODULACION EN PORTADORA-----------------------
 Ts = 1/fs;
