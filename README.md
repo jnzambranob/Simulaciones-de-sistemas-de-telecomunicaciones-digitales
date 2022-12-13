@@ -13,4 +13,4 @@
  
  La **Entrega 2** se unió con la **Entrega 3** y puede encontrar en el siguiente enlace: [Script ENTREGA 2-3](https://github.com/jnzambranob/Simulaciones-de-sistemas-de-telecomunicaciones-digitales/blob/main/E2/Entrega2_CDMA_BPSK.m)
 
- La **Entrega 4** se puede encontrar en el siguiente enlace: [Script ENTREGA 4](https://github.com/jnzambranob/Simulaciones-de-sistemas-de-telecomunicaciones-digitales/blob/main/E4/Entrega4_MT_INTERFERENCIA.m)
+ La **Entrega 4** se puede encontrar en el siguiente enlace: [Scripts ENTREGA 4](https://github.com/jnzambranob/Simulaciones-de-sistemas-de-telecomunicaciones-digitales/tree/main/E4)
