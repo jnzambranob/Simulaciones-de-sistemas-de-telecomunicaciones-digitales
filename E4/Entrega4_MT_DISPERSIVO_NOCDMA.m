@@ -2,7 +2,7 @@
 %% Sistema de telecomunicaciones digitales (16QAM Mod/Demod) - Laboratorio de sistemas de telecomunicaciones 2
 % *Universidad del Cauca - 2022-2*
 % 
-% *Entrega 2*
+% *Entrega 4*
 % 
 % *Grupo 6 - Nicolás Zambrano y Sandy Suarez*
 %% Codificador
@@ -13,7 +13,7 @@ tic;
 Ro=0.35 ; U=4; L=8; Tf=1;
 h1 = rcosfir(Ro, L, U, Tf,'sqrt') ; %Funcion de transferencia del filtro conformador de pulsos
 %-------------------CONSTRUCCION DE MENSAJE------------------------
-Nb=1000000; %número de bits
+Nb=100000; %número de bits
 M=2; %orden de la modulación
 Es=1; %Energia promedio de la constelacion
 wal=8;
@@ -54,21 +54,29 @@ portadorapsk = sqrt(2)*(x1.*cos(2*pi*fc.*t)-imag(x1).*sin(2*pi*fc.*t)); % Trasla
 ppsk = portadorapsk;
 %-----------------------------------------------------
 %---------------------CANAL---------------------------
+%-------------------------MULTITRAYECTO------------------------------
+segundos=16/16;
+senal_retraso=zeros(1,fs*segundos); % Señal con retraso de un segundo
+portadorapskretraso = [senal_retraso ppsk]; 
+%portadorapskretraso = circshift(portadorapskretraso,fs*segundos); % Llena el vector con el retraso en segundos
 %---------------------RUIDO---------------------------
-%varianza=0;
+
 ebno=1*ind; %EbNo en veces
 varianza=Es/(2*log2(M)*ebno);%determina la varianza de ruido
-%Z=sigma*randn(1,length(S1)); %forma para dimensionar correctamente el ruido que se introduce al sistema 
-ruidopsk=portadorapsk+sqrt(varianza)*randn(1,length(portadorapsk));
+sigma=sqrt(varianza);
+Z=sigma*randn(1,length(portadorapsk)); %forma para dimensionar correctamente el ruido que se introduce al sistema 
+ruidopsk=portadorapsk+Z+portadorapskretraso(1:length(portadorapsk)); % Señal portadora con ruido dispersivo gausiano y retraso en el tiempo
+ruidopskt=portadorapsk+Z+portadorapskretraso(1:length(portadorapsk));
 %snr=1.9;%Cambia la snr de la señal y el ruido (es funcion de la varianza)
 %ruidoqam=awgn(moduladaqam,snr);
 x1=ruidopsk;
 x=x1;
+xdisp=portadorapsk+Z;
 %-----------------------------------------------------
-%-------------------------MULTITRAYECTO------------------------------
-%desplazamiento=1;
-%xdesplazada=x(corrimiento en segundos)
-%xd=x+xdesplazada;%Canal dispersivo a
+
+
+
+
 xc=x1;
 %x1bkp2=x;
 %-----------------------------------------------------
@@ -76,11 +84,11 @@ xc=x1;
 %xinterf=randsrc(1,size(x,2),[min(x) max(x)]);
 %xinterf=min(x)+(max(x)-min(x)).*randn(size(x,2),1);
 %xinterf=randn(size(x),'like',x);
-xinterf=randi([ceil(min(x)) ceil(max(x))],1,size(x,2));
+%xinterf=randi([ceil(min(x)) ceil(max(x))],1,size(x,2));
 %hint=rcosfir(Ro,2,16,Tf,'sqrt');
-hint=fir1(256,[0.7 0.7001]);
-xinterf=filter(hint,2,xinterf);
-x=x+xinterf;
+%hint=fir1(256,[0.7 0.7001]);
+%xinterf=filter(hint,2,xinterf);
+%x=x+xinterf;
 %-----------------------------------------------------
 %-------------------DEMODULACION EN PORTADORA-----------------------
 Ts = 1/fs;
@@ -153,12 +161,12 @@ title('Curvas de rendimiento para el DTS asignado')
 %x=xinterf;
 figure
 espectrox =(abs(fftshift(fft(x)))/length(x));   %FFT
-espectroxint =(abs(fftshift(fft(xinterf)))/length(xinterf));   %FFT
+espectroxdisp =(abs(fftshift(fft(xdisp)))/length(xdisp));   %FFT
 precision = fs/length(x);
 f = linspace(-fs/2+precision/2, fs/2-precision/2, length(x)); %Centrar frecuencia
 plot(f,espectrox);
 hold on
-plot(f,espectroxint,'m-','LineWidth',1);
+plot(f,espectroxdisp,'m-','LineWidth',1);
 axis([0 R*2 0 2*10^-2])
 xlabel('Frecuencia')
 ylabel('Densidad espectral de potencia')
